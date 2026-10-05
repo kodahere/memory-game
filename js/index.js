@@ -8,6 +8,8 @@ const header = createHeader({
   onShowLeaders: () => console.log('Лидеры нажаты'),
 });
 
+const winModal = createModal();
+
 const CHAMPIONS = ['Yasuo', 'Lux', 'Jinx', 'Ahri', 'Ezreal', 'Garen', 'Teemo', 'Zed'];
 const doubled = CHAMPIONS.concat(CHAMPIONS);
 
@@ -29,7 +31,7 @@ function handleCardClick(cardId) {
 
   const card = cards.find((c) => c.getId() === cardId);
   if (!card) return;
-  
+
   if (firstCard === null) {
     card.open();
     firstCard = card;
@@ -46,6 +48,15 @@ function handleCardClick(cardId) {
     card.lock();
     pairs++;
     header.updatePairs(pairs, 8);
+
+    if (pairs === 8) {
+      setTimeout(() => {
+        const message = document.createElement('p');
+        message.textContent = `Вы нашли все пары за ${moves} ходов!`;
+        winModal.open({ title: 'Победа!', content: message });
+      }, 700);
+    }
+
     firstCard = null;
     isBoardLocked = false;
   } else {
@@ -58,9 +69,7 @@ function handleCardClick(cardId) {
   }
 }
 
-const winModal = createModal();
-document.body.append(winModal.element)
 const board = createBoard();
 board.setCards(cards);
 
-document.body.append(header.element, board.element);
+document.body.append(header.element, winModal.element, board.element);
