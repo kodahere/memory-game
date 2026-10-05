@@ -10,11 +10,6 @@ const header = createHeader({
 const CHAMPIONS = ['Yasuo', 'Lux', 'Jinx', 'Ahri', 'Ezreal', 'Garen', 'Teemo', 'Zed'];
 const doubled = CHAMPIONS.concat(CHAMPIONS);
 
-function handleCardClick(cardId) {
-  const card = cards.find((c) => c.getId() === cardId);
-  if (card) card.open();
-}
-
 const cards = doubled.map((value, index) => {
   return createCard({
     id: index,
@@ -23,13 +18,40 @@ const cards = doubled.map((value, index) => {
   });
 });
 
+let firstCard = null;
+let isBoardLocked = false;
+
+function handleCardClick(cardId) {
+  if (isBoardLocked) return;
+
+  const card = cards.find((c) => c.getId() === cardId);
+  if (!card) return;
+
+  if (firstCard === null) {
+    card.open();
+    firstCard = card;
+    return;
+  }
+
+  card.open();
+  isBoardLocked = true;
+
+  if (firstCard.getValue() === card.getValue()) {
+    firstCard.lock();
+    card.lock();
+    firstCard = null;
+    isBoardLocked = false;
+  } else {
+    setTimeout(() => {
+      firstCard.close();
+      card.close();
+      firstCard = null;
+      isBoardLocked = false;
+    }, 1000);
+  }
+}
+
 const board = createBoard();
 board.setCards(cards);
 
 document.body.append(header.element, board.element);
-
-header.updateMoves(0);
-header.updatePairs(0, 8);
-
-const card = cards.find((c) => c.getId() === cardId);
-if (card) card.open();
