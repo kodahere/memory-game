@@ -4,6 +4,8 @@ import { createCard } from './components/card.js';
 import { createModal } from './components/modal.js';
 import { getTopLeaders, saveScore } from './components/leaders.js';
 
+const ASSETS = 'assets';
+
 const CHAMPIONS = ['Yasuo', 'Lux', 'Jinx', 'Ahri', 'Ezreal', 'Garen', 'Teemo', 'Zed'];
 
 let moves = 0;
@@ -45,6 +47,7 @@ function createCards() {
     return createCard({
       id: index,
       value: value,
+      iconUrl: `${ASSETS}/${value}.png`,
       onClick: handleCardClick,
     });
   });

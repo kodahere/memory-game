@@ -25,10 +25,5 @@
 1. Клонируйте репозиторий:
    ```bash
    git clone https://github.com/kodahere/memory-game.git
-   cd memory-game
-   git checkout memory-game
 
-   # Откройте index.html в браузере
-
-2. Либо через встроенный Live server
    

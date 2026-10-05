@@ -1,4 +1,4 @@
-export function createCard({ id, value, onClick }) {
+export function createCard({ id, value, iconUrl, onClick }) {
   let isOpen = false;
   let isLocked = false;
 
@@ -10,7 +10,16 @@ export function createCard({ id, value, onClick }) {
 
   const front = document.createElement("div");
   front.className = "card__front";
-  front.textContent = value;
+
+  if (iconUrl) {
+    const img = document.createElement("img");
+    img.src = iconUrl;
+    img.alt = value;
+    img.className = "card__icon";
+    front.append(img);
+  } else {
+    front.textContent = value;
+  }
 
   const back = document.createElement("div");
   back.className = "card__back";
