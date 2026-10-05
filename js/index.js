@@ -18,6 +18,8 @@ const cards = doubled.map((value, index) => {
   });
 });
 
+let moves = 0;
+let pairs = 0;
 let firstCard = null;
 let isBoardLocked = false;
 
@@ -26,7 +28,7 @@ function handleCardClick(cardId) {
 
   const card = cards.find((c) => c.getId() === cardId);
   if (!card) return;
-
+  
   if (firstCard === null) {
     card.open();
     firstCard = card;
@@ -35,10 +37,14 @@ function handleCardClick(cardId) {
 
   card.open();
   isBoardLocked = true;
+  moves++;
+  header.updateMoves(moves);
 
   if (firstCard.getValue() === card.getValue()) {
     firstCard.lock();
     card.lock();
+    pairs++;
+    header.updatePairs(pairs, 8);
     firstCard = null;
     isBoardLocked = false;
   } else {
