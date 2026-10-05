@@ -10,11 +10,16 @@ const header = createHeader({
 const CHAMPIONS = ['Yasuo', 'Lux', 'Jinx', 'Ahri', 'Ezreal', 'Garen', 'Teemo', 'Zed'];
 const doubled = CHAMPIONS.concat(CHAMPIONS);
 
+function handleCardClick(cardId) {
+  const card = cards.find((c) => c.getId() === cardId);
+  if (card) card.open();
+}
+
 const cards = doubled.map((value, index) => {
   return createCard({
     id: index,
     value: value,
-    onClick: (cardId) => console.log('clicked card', cardId),
+    onClick: handleCardClick,
   });
 });
 
@@ -25,3 +30,6 @@ document.body.append(header.element, board.element);
 
 header.updateMoves(0);
 header.updatePairs(0, 8);
+
+const card = cards.find((c) => c.getId() === cardId);
+if (card) card.open();
