@@ -2,6 +2,7 @@ import { createHeader } from './components/header.js';
 import { createBoard } from './components/board.js';
 import { createCard } from './components/card.js';
 import { createModal } from './components/modal.js';
+import { getTopLeaders, saveScore } from './components/leaders.js';
 
 const CHAMPIONS = ['Yasuo', 'Lux', 'Jinx', 'Ahri', 'Ezreal', 'Garen', 'Teemo', 'Zed'];
 
@@ -14,14 +15,19 @@ let cards = [];
 
 const header = createHeader({
   onNewGame: startNewGame,
-  onShowLeaders: () => console.log('Лидеры нажаты'),
+  onShowLeaders: showLeaders,
 });
 
 const winModal = createModal();
+const leadersModal = createModal();
 
 const board = createBoard();
-document.body.append(header.element, winModal.element, board.element);
-
+document.body.append(
+  header.element,
+  winModal.element,
+  leadersModal.element,
+  board.element,
+);
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -46,6 +52,7 @@ function createCards() {
 
 function startNewGame() {
   winModal.close();
+  leadersModal.close();
 
   if (mismatchTimer !== null) {
     clearTimeout(mismatchTimer);
@@ -62,6 +69,38 @@ function startNewGame() {
 
   cards = createCards();
   board.setCards(cards);
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+}
+
+function showLeaders() {
+  const top = getTopLeaders();
+
+  let content;
+  if (top.length === 0) {
+    content = document.createElement('p');
+    content.textContent = 'Результатов пока нет';
+  } else {
+    const list = document.createElement('ol');
+    list.className = 'leaders';
+
+    for (const entry of top) {
+      const item = document.createElement('li');
+      item.textContent = `${entry.moves} ходов — ${formatDate(entry.date)}`;
+      list.append(item);
+    }
+
+    content = list;
+  }
+
+  leadersModal.open({ title: 'Таблица лидеров', content });
 }
 
 function handleCardClick(cardId) {
@@ -88,20 +127,9 @@ function handleCardClick(cardId) {
     header.updatePairs(pairs, 8);
 
     if (pairs === 8) {
+      saveScore(moves);
       setTimeout(() => {
-        const message = document.createElement('p');
-        message.textContent = `Вы нашли все пары за ${moves} ходов!`;
-
-        const newGameBtn = document.createElement('button');
-        newGameBtn.type = 'button';
-        newGameBtn.className = 'btn btn--new';
-        newGameBtn.textContent = 'Новая игра';
-        newGameBtn.addEventListener('click', startNewGame);
-
-        const content = document.createElement('div');
-        content.append(message, newGameBtn);
-
-        winModal.open({ title: 'Победа!', content });
+        showWinModal();
       }, 700);
     }
 
@@ -116,6 +144,22 @@ function handleCardClick(cardId) {
       mismatchTimer = null;
     }, 1000);
   }
+}
+
+function showWinModal() {
+  const message = document.createElement('p');
+  message.textContent = `Вы нашли все пары за ${moves} ходов!`;
+
+  const newGameBtn = document.createElement('button');
+  newGameBtn.type = 'button';
+  newGameBtn.className = 'btn btn--new';
+  newGameBtn.textContent = 'Новая игра';
+  newGameBtn.addEventListener('click', startNewGame);
+
+  const content = document.createElement('div');
+  content.append(message, newGameBtn);
+
+  winModal.open({ title: 'Победа!', content });
 }
 
 startNewGame();

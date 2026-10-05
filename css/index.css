@@ -107,3 +107,12 @@ body {
 .modal__body {
   font-size: 1rem;
 }
+
+.leaders {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.leaders li {
+  padding: 0.25rem 0;
+}
