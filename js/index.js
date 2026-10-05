@@ -1,6 +1,7 @@
 import { createHeader } from './components/header.js';
 import { createBoard } from './components/board.js';
 import { createCard } from './components/card.js';
+import { createModal } from './components/modal.js';
 
 const header = createHeader({
   onNewGame: () => console.log('Новая игра нажата'),
@@ -57,6 +58,8 @@ function handleCardClick(cardId) {
   }
 }
 
+const winModal = createModal();
+document.body.append(winModal.element)
 const board = createBoard();
 board.setCards(cards);
 
