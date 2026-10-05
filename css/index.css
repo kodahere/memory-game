@@ -24,4 +24,40 @@ body {
   cursor: pointer;
   background: #16213e;
   border-radius: 8px;
+  perspective: 1000px;
+}
+
+
+.card__inner {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.card--open .card__inner {
+  transform: rotateY(180deg);
+}
+
+.card__front,
+.card__back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  border-radius: 8px;
+}
+
+.card__front {
+  background: #533483;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transform: rotateY(180deg);
+}
+
+.card__back {
+  background: #16213e;
+  border: 2px solid #533483;
 }
