@@ -3,7 +3,7 @@ export function createBoard() {
   element.className = "board";
 
   function setCards(cards) {
-    element.innerHTML = "";
+    element.replaceChildren();
     element.append(...cards.map((card) => card.element));
   }
 

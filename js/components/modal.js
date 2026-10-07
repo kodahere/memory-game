@@ -21,8 +21,7 @@ export function createModal() {
 
   function open({ title: newTitle, content: newContent }) {
     title.textContent = newTitle;
-    body.innerHTML = "";
-    body.append(newContent);
+    body.replaceChildren(newContent);
     element.classList.add("modal--open");
   }
 
